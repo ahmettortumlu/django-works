@@ -31,19 +31,27 @@ def register(request):
         # user.save()
         profile = form_profile.save(commit=False)
         profile.user = user
+
         if 'profile_pic' in request.FILES:
             profile.profile_pic = request.FILES['profile_pic']
+
         profile.save()
         messages.success(request, "Register successful")
+
         return redirect('index')
+
     context = {
         'form_profile': form_profile,
         'form_user': form_user
     }
+
     return render(request, 'users/register.html', context)
 
+@login_required
 def user_logout(request):
-	pass
+    messages.success(request, "You Logout!")
+    logout(request)
+    return redirect('index')
 
 def user_login(request):
     form = LoginForm(request.POST or None)
@@ -70,5 +78,6 @@ def user_login(request):
     
     return render(request, 'users/user_login.html', {"form": form})
 
+@login_required
 def students(request):
-	pass
+    return HttpResponse('<h1>Student Admin Page</h1>')
